@@ -1,0 +1,319 @@
+@import './variables.scss';
+@import './mixin.scss';
+@import './transition.scss';
+@import './element-ui.scss';
+@import './sidebar.scss';
+@import './btn.scss';
+
+body {
+  height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+label {
+  font-weight: 700;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
+
+.padding-content {
+  padding: 4px 0;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+div:focus {
+  outline: none;
+}
+
+.fr {
+  float: right;
+}
+
+.fl {
+  float: left;
+}
+
+.pr-5 {
+  padding-right: 5px;
+}
+
+.pl-5 {
+  padding-left: 5px;
+}
+
+.block {
+  display: block;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.inlineBlock {
+  display: block;
+}
+
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
+
+aside {
+  background: #eef1f6;
+  padding: 8px 24px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+  display: block;
+  line-height: 32px;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  color: #2c3e50;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  a {
+    color: #337ab7;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(32, 160, 255);
+    }
+  }
+}
+// 
+.navbar .hamburger-container:hover{
+  color: #0299FF;
+}
+// 菜单栏背景色
+#app .sidebar-container{
+  background: #020B1F;
+}
+#app .sidebar-container .submenu-title-noDropdown,
+#app .sidebar-container .el-submenu__title,
+#app .sidebar-container .nest-menu .el-submenu > .el-submenu__title,
+#app .sidebar-container .el-submenu .el-menu-item{
+  background-color: #020B1F!important;
+}
+#app .sidebar-container .submenu-title-noDropdown:hover,
+#app .sidebar-container .el-submenu__title:hover,
+#app .sidebar-container .nest-menu .el-submenu > .el-submenu__title:hover,
+#app .sidebar-container .el-submenu .el-menu-item:hover{
+  background-color: #000000!important;
+}
+#app .sidebar-container .el-submenu.is-active{
+  border-left: 0px!important;
+}
+#app .sidebar-container .el-menu-item.is-active:not(.is-opened){
+  color: #0299FF;
+  border-left: 2px solid #0299FF;
+  background-color: #000000!important;
+}
+#app .sidebar-container .el-menu-item:not(.is-opened){
+  border-left: 2px solid transparent;
+}
+#app .sidebar-container .el-menu-item:not(.submenu-title-noDropdown):not(.is-active){
+  color: rgba(255,255,255,0.65)!important;
+}
+#app .sidebar-container .el-submenu__title,
+#app .sidebar-container .el-menu-item.submenu-title-noDropdown{
+  font-weight: 600;
+}
+#app .sidebar-container .el-submenu__title,
+#app .sidebar-container .el-menu-item.submenu-title-noDropdown:not(.is-active){
+  color: #ffffff!important;
+  font-weight: 600;
+}
+// 分页样式
+.el-pagination{
+  button{
+    width: 32px;
+    height: 32px;
+  }
+  .el-pager li{
+    height: 32px;
+    line-height: 32px;
+    width: 32px;
+  }
+  .el-input--mini .el-input__inner{
+    height: 32px;
+    line-height: 32px;
+  }
+  .el-pagination__editor.el-input .el-input__inner{
+    height: 32px;
+  }
+  &.is-background .btn-prev, &.is-background .btn-next, &.is-background .el-pager li{
+    margin: 0 4px;
+  }
+  &.is-background .el-pager li:not(.disabled).active{
+    background:#0299FF;
+    border: 1px solid #0299FF;
+  }
+  &.is-background .btn-prev, &.is-background .btn-next, &.is-background .el-pager li{
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 2px;
+  }
+  &.is-background .el-pager li:not(.active):hover{
+    border: 1px solid #0299ff;
+    color: #0299FF;
+  }
+
+  &.is-background button:not(.disabled):hover{
+    border: 1px solid #0299ff;
+    color: #0299FF;
+  }
+  .el-pagination__jump{
+    margin-left: 0px;
+  }
+  .number{
+    font-weight: normal;
+  }
+}
+label{
+  font-weight: normal!important;
+}
+// 搜索条件公共样式
+.searchForm{
+  background: #F8F8F8;
+  .el-form-item{
+    margin: 15px 0;
+    width: 100%;
+    .el-form-item__label{
+      width: 96px;
+      font-weight: 400;
+    }
+    .el-form-item__content{
+      width: calc(100% - 96px);
+      >div{
+        width: 100%!important;
+      }
+    }
+  }
+  .el-row >div:nth-last-child(1){
+    padding-left: 24px
+  }
+}
+// 按钮操作行
+.mtb12{
+  margin-top: 12px;
+  margin-bottom: 12px;
+  button{
+    width: 76px;
+    height: 28px;
+    background: #0299ff;
+    border-radius: 2px;
+  }
+}
+// 表格头部背景色
+.el-table thead{
+  background: #f8f8f8;
+}
+//main-container全局样式
+.app-container {
+  padding: 0 12px 20px;
+}
+
+
+.components-container {
+  margin: 30px 50px;
+  position: relative;
+}
+
+.pagination-container {
+  margin-top: 30px;
+}
+
+.text-center {
+  text-align: center
+}
+
+.sub-navbar {
+  height: 50px;
+  line-height: 50px;
+  position: relative;
+  width: 100%;
+  text-align: right;
+  padding-right: 20px;
+  transition: 600ms ease position;
+  background: linear-gradient(90deg, rgba(32, 182, 249, 1) 0%, rgba(32, 182, 249, 1) 0%, rgba(33, 120, 241, 1) 100%, rgba(33, 120, 241, 1) 100%);
+
+  .subtitle {
+    font-size: 20px;
+    color: #fff;
+  }
+
+  &.draft {
+    background: #d0d0d0;
+  }
+
+  &.deleted {
+    background: #d0d0d0;
+  }
+}
+
+.link-type,
+.link-type:focus {
+  color: #337ab7;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(32, 160, 255);
+  }
+}
+
+.filter-container {
+  padding-bottom: 10px;
+
+  .filter-item {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 10px;
+  }
+}
+
+//refine vue-multiselect plugin
+.multiselect {
+  line-height: 16px;
+}
+
+.multiselect--active {
+  z-index: 1000 !important;
+}
