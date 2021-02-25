@@ -25,6 +25,11 @@
         <!-- 语言选择 -->
         <!-- <LangSelect class="right-menu-item hover-effect" /> -->
       </template>
+        <div @click="goWait" style="cursor: pointer;">
+          <el-badge :value="number" class="item" style="margin-right: 30px;top:6px">
+            <i class="el-icon-bell" style="font-size:20px"></i>
+          </el-badge>
+        </div>
       <!-- 头像下拉 -->
       <el-dropdown
         class="avatar-container right-menu-item hover-effect"
@@ -123,6 +128,7 @@ import Screenfull from "@/components/Screenfull";
 import SizeSelect from "@/components/SizeSelect";
 import LangSelect from "@/components/LangSelect";
   import socket from '@/views/socket'
+import { getCount } from "@/api/orderList";
 export default {
   components: {
     Breadcrumb,
@@ -143,6 +149,7 @@ export default {
       }
     };
     return {
+      number: 0,
       open: false,
       passOpen: false,
       btnpassloading: false,
@@ -192,10 +199,22 @@ export default {
     };
   },
   created() {
+    this.ebus.$on("waitingAcceptNum",(num)=>{
+      console.log(num)
+      this.number = num
+    })
     getUserInfo().then((res) => {
       this.form = res.data;
       this.$store.dispatch("setUserInfo", res.data)
       this.$refs.socket.initWebSocket()
+      let queryParams = {
+        state: 'waiting_accept'
+      }
+      getCount(queryParams).then(
+        response => {
+          this.number = response.data;
+        }
+      );
     });
   },
   computed: {
@@ -216,6 +235,14 @@ export default {
     },
   },
   methods: {
+    goWait(){
+      console.log(123)
+      if(this.$route.path == "/order/waitingAccept"){
+          this.ebus.$emit("waitingAcceptRefresh")
+      }else{
+          this.$router.push("/order/waitingAccept")
+      }
+    },
     savePass() {
       this.$refs.passform.validate((valid) => {
           if (valid) {
@@ -301,6 +328,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.navbar::v-deep .el-badge__content.is-fixed{
+  transform: translateY(0) translateX(100%);
+}
 .navbar {
   height: 50px;
   overflow: hidden;
@@ -334,7 +364,9 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
-
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     &:focus {
       outline: none;
     }

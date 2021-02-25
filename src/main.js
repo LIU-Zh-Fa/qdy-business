@@ -10,7 +10,6 @@ import '@/assets/styles/index.scss'
 import '@/assets/styles/ruoyi.scss'
 import '@/assets/styles/common.scss'
 import {on,emit,off} from '@/utils/eventbus'
-
 import App from './App'
 import store from './store'
 import router from './router'

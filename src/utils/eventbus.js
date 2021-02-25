@@ -28,6 +28,6 @@ const off = function(eventName,callback){
         EventList[EventName] = [];
     }
 }
-export default {
+export {
     on,emit,off
 }

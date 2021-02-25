@@ -9,10 +9,17 @@ export function getList(params){
 }
 export function checkPickCode(params){
     return request({
-        url: "/cb/verification",
+        url: "/cb/print",
         method: "get",
         params: params
     })
+}
+export function verification(params){
+  return request({
+      url: "/cb/verification",
+      method: "get",
+      params: params
+  })
 }
 export function orderDetail(params){
     return request({
@@ -36,5 +43,33 @@ export function orderAmountSave(params){
     url: "/cb/orderAmountSave",
     method: "post",
     data: params
+  })
+}
+export function accept(params){
+  return request({
+    url: "/cb/accept",
+    method: "get",
+    params: params
+  })
+}
+export function refuse(params){
+  return request({
+    url: "/cb/deny",
+    method: "get",
+    params: params
+  })
+}
+export function cancel(params){
+  return request({
+    url: "/cb/waiting_print_cancel",
+    method: "get",
+    params: params
+  })
+}
+export function getCount(params){
+  return request({
+    url: "/cb/stateAcount",
+    method: "get",
+    params: params
   })
 }

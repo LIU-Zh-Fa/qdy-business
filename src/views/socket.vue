@@ -3,8 +3,12 @@
 </template>
 
 <script>
-import audio from '@/assets/mp3/auido.mp3'
+import newOrder from '@/assets/mp3/newOrder.mp3'
+import newOrderz from '@/assets/mp3/newOrderz.mp3'
+import cancelAudio from '@/assets/mp3/cancel.mp3'
 import $ from '../utils/jquery-1.11.3'
+import { mapState } from 'vuex'
+
 export default {
     data() {
         return {
@@ -14,7 +18,9 @@ export default {
             timeoutObj: null,//心跳心跳倒计时
             serverTimeoutObj: null,//心跳倒计时
             timeoutnum: null,//断开 重连倒计时
-            audio
+            newOrder,
+            newOrderz,
+            cancelAudio
         };
     },
     created() {
@@ -24,6 +30,11 @@ export default {
     destroyed: function() {
         //页面销毁时关闭长连接
         this.websocketclose();
+    },
+    computed: {
+        ...mapState({
+            userInfo: state => state.user.userInfo,
+        })
     },
     methods: {
         initWebSocket(){//建立连接
@@ -85,11 +96,11 @@ export default {
 
             }, self.timeout)
         },
-        playSound(){//播放声音
+        playNew(){//播放声音
             var borswer = window.navigator.userAgent.toLowerCase();
             if (borswer.indexOf("ie") >= 0) {
                 //IE内核浏览器
-                var strEmbed = '<embed name="embedPlay" src="'+this.audio+'" autostart="true" hidden="true" loop="false"></embed>';
+                var strEmbed = '<embed name="embedPlay" src="'+this.newOrder+'" autostart="true" hidden="true" loop="false"></embed>';
                 if ($("body").find("embed").length <= 0){
                     $("body").append(strEmbed);
                 }
@@ -105,7 +116,7 @@ export default {
                 //embed.play();这个不需要
             } else {
                 //非IE内核浏览器
-                var strAudio = "<audio id='audioPlay' type='audio/mpeg' src='"+this.audio+"' hidden='true'>";
+                var strAudio = "<audio id='audioPlay' type='audio/mpeg' src='"+this.newOrder+"' hidden='true'>";
                 if ($("body").find("audio").length <= 0){
                     $("body").append(strAudio);
                 }
@@ -124,9 +135,156 @@ export default {
                 this.lastRunTime = Date.now();
             }
         },
+        playNewz(){//播放声音
+            var borswer = window.navigator.userAgent.toLowerCase();
+            if (borswer.indexOf("ie") >= 0) {
+                //IE内核浏览器
+                var strEmbed = '<embed name="embedPlay" src="'+this.newOrderz+'" autostart="true" hidden="true" loop="false"></embed>';
+                if ($("body").find("embed").length <= 0){
+                    $("body").append(strEmbed);
+                }
+                const body = document.querySelector("body");
+                if (body.append) {
+                    body.append(strEmbed);
+                } else {
+                    body.appendChild(strEmbed);
+                }
+                var embed = document.embedPlay;
+                //浏览器不支持 audion，则使用 embed 播放
+                embed.volume = 100;
+                //embed.play();这个不需要
+            } else {
+                //非IE内核浏览器
+                var strAudio = "<audio id='audioPlay' type='audio/mpeg' src='"+this.newOrderz+"' hidden='true'>";
+                if ($("body").find("audio").length <= 0){
+                    $("body").append(strAudio);
+                }
+                var audio = document.getElementById("audioPlay");
+
+                var currentTime = Date.now();
+                var protectTime = 500;//设置保护性延时 单位毫秒，不要小于50 建议100以上
+                if((currentTime - this.lastRunTime) < protectTime){
+                        return;//两次执行太过频繁，直接退出
+                }
+                if(audio.paused){
+                    audio.play();
+                }else{
+                    audio.pause();
+                }
+                this.lastRunTime = Date.now();
+            }
+        },
+        playCancel(){//播放声音
+            var borswer = window.navigator.userAgent.toLowerCase();
+            if (borswer.indexOf("ie") >= 0) {
+                //IE内核浏览器
+                var strEmbed = '<embed name="embedPlay" src="'+this.cancelAudio+'" autostart="true" hidden="true" loop="false"></embed>';
+                if ($("body").find("embed").length <= 0){
+                    $("body").append(strEmbed);
+                }
+                const body = document.querySelector("body");
+                if (body.append) {
+                    body.append(strEmbed);
+                } else {
+                    body.appendChild(strEmbed);
+                }
+                var embed = document.embedPlay;
+                //浏览器不支持 audion，则使用 embed 播放
+                embed.volume = 100;
+                //embed.play();这个不需要
+            } else {
+                //非IE内核浏览器
+                var strAudio = "<audio id='audioPlay' type='audio/mpeg' src='"+this.cancelAudio+"' hidden='true'>";
+                if ($("body").find("audio").length <= 0){
+                    $("body").append(strAudio);
+                }
+                var audio = document.getElementById("audioPlay");
+
+                var currentTime = Date.now();
+                var protectTime = 500;//设置保护性延时 单位毫秒，不要小于50 建议100以上
+                if((currentTime - this.lastRunTime) < protectTime){
+                        return;//两次执行太过频繁，直接退出
+                }
+                if(audio.paused){
+                    audio.play();
+                }else{
+                    audio.pause();
+                }
+                this.lastRunTime = Date.now();
+            }
+        },
+        showNew(payload){
+            console.log(payload)
+            // 新订单提示消息
+            this.ebus.$emit("waitingAcceptNum",payload.waitPrintOrderNum)
+            let _this = this;
+            this.$notify({
+                title: '通知',
+                dangerouslyUseHTMLString: true,
+                message: `<p>您有新的订单，请注意查收</p>
+                    <p>订单号：<span style="color:rgba(0,0,0,0.65)">${payload.orderNum}</span></p>
+                    <p style="text-align:right;color:#1890ff;text-decoration:underline;cursor:pointer;">立即查看</p>`,
+                position: 'bottom-right',
+                onClick() {
+                    _this.goWait(); //自定义回调,message为传的参数
+                }
+            });
+        },
+        goWait(){
+            if(this.$route.path == "/order/waitingAccept"){
+                this.ebus.$emit("waitingAcceptRefresh")
+            }else{
+                this.$router.push("/order/waitingAccept")
+            }
+        },
+        showNewz(payload){
+            console.log(payload)
+            // 新订单提示消息
+            this.ebus.$emit("waitingAcceptNum",payload.waitPrintOrderNum)
+            let _this = this;
+            this.$notify({
+                title: '通知',
+                dangerouslyUseHTMLString: true,
+                message: `<p>您有新的订单，系统已自动接单，请注意查收</p>
+                    <p>订单号：<span style="color:rgba(0,0,0,0.65)">${payload.orderNum}</span></p>
+                    <p style="text-align:right;color:#1890ff;text-decoration:underline;cursor:pointer;">立即查看</p>`,
+                position: 'bottom-right',
+                onClick() {
+                    _this.goWaitz(); //自定义回调,message为传的参数
+                }
+            });
+        },
+        goWaitz(){
+            if(this.$route.path == "/order/waitingPrint"){
+                this.ebus.$emit("waitingPrintRefresh")
+            }else{
+                this.$router.push("/order/waitingPrint")
+            }
+        },
+        showCancel(payload){
+            // 取消订单提示消息
+            let _this = this;
+            this.$notify({
+                title: '通知',
+                dangerouslyUseHTMLString: true,
+                message: `<p>您有订单被取消，请注意查看</p>
+                    <p>订单号：<span style="color:rgba(0,0,0,0.65)">${payload.orderNum}</span></p>
+                    <p style="text-align:right;color:#1890ff;text-decoration:underline;cursor:pointer;">立即查看</p>`,
+                position: 'bottom-right',
+                onClick() {
+                    _this.goCancel(); //自定义回调,message为传的参数
+                }
+            });
+        },
+        goCancel(){
+            if(this.$route.path == "/order/cancel"){
+                this.ebus.$emit("cancelRefresh")
+            }else{
+                this.$router.push("/order/cancel")
+            }
+        },
         websocketonopen() {//连接成功事件
             //提示成功
-            console.log("连接成功",3)
             const param = {message: this.$store.state.user.userInfo.userauthid, type: 1}
             this.websocketsend(JSON.stringify(param))
             //开启心跳
@@ -147,9 +305,22 @@ export default {
             this.reconnect();
         },
         websocketonmessage(event) {//接收服务器推送的信息
-            console.log(event)
-            //打印收到服务器的内容
-            this.playSound()
+            let res = JSON.parse(event.data)
+            if(res.type == 1){
+                // 创建订单
+                if(this.userInfo.state == 1){
+                    this.playNewz()
+                    this.showNewz(res.payload)
+                }else if(this.userInfo.state == 2){
+                    this.playNew()
+                    this.showNew(res.payload)
+                }
+                
+            }else if(res.type == 3 || res.type == 4){
+                // 已取消订单
+                this.playCancel()
+                this.showCancel(res.payload)
+            }
             //收到服务器信息，心跳重置
             this.reset();
         },
@@ -161,3 +332,8 @@ export default {
 };
 
 </script>
+<style>
+.el-notification{
+    width: 280px;
+}
+</style>

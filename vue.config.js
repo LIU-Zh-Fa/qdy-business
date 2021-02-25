@@ -33,9 +33,9 @@ module.exports = {
     open: true,
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
-        // target: `http://haodong.dschenyang.com:8889/api/dayin`,
+        target: `http://haodong.dschenyang.com:8889/api/dayin`,
         // target: `http://49.232.130.5:8889/api/dayin`,
-        target: 'http://192.168.101.23:8889/api/dayin',
+        // target: 'http://192.168.101.23:8889/api/dayin',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''

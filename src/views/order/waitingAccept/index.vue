@@ -26,18 +26,6 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="5">
-          <el-form-item label="订单状态" prop="state">
-            <el-select v-model="queryParams.state" placeholder="请选择" clearable >
-              <el-option
-                v-for="item in statusO"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
         <el-col :span="8">
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -135,13 +123,13 @@
 
 <script>
 import { getList, orderDetail, accept, refuse, cancel } from "@/api/orderList";
-import { statusOptions, statusO } from './constants/index'
+import { statusOptions } from './constants/index'
 export default {
   name: "orderlist",
   data() {
     return {
       btnloading: false,
-      statusOptions,statusO,
+      statusOptions,
       // 遮罩层
       loading: true,
       // 总条数
@@ -153,20 +141,21 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        state: '',
+        state: 'waiting_accept',
         pickCode: '',
         phonenum: ''
       },
       openAccept: false,
       acceptBtn: false,
       orderList: [],
-      username: '',
-      phonennum: '',
       remark: ''
     };
   },
   created() {
     this.getList();
+    this.ebus.$on("waitingAcceptRefresh",()=>{
+      this.handleRefresh()
+    })
   },
   methods: {
     /**  */
@@ -177,6 +166,7 @@ export default {
           this.list = response.data.list;
           this.total = response.data.total;
           this.loading = false;
+          this.ebus.$emit("waitingAcceptNum",this.total)
         }
       );
     },
@@ -184,7 +174,7 @@ export default {
       this.queryParams ={
         pageNum: 1,
         pageSize: 10,
-        state: '',
+        state: 'waiting_accept',
         pickCode: '',
         phonenum: ''
       }
@@ -205,8 +195,6 @@ export default {
         this.acceptBtn = true
         orderDetail({orderId: row.id}).then(res=>{
           this.remark = res.data.SysOrder.remark
-          this.username = res.data.SysOrder.username
-          this.phonennum = res.data.SysOrder.phonennum
           this.orderList = res.data.SysFile
           this.acceptBtn = false
         })

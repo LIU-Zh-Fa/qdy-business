@@ -51,6 +51,8 @@ export const constantRoutes = [
   {
     path: '/order',
     component: Layout,
+    name: '订单管理',
+    meta: { title: '订单管理', icon: 'user' },
     redirect: 'noredirect',
     children: [
       {
@@ -58,6 +60,24 @@ export const constantRoutes = [
         component: (resolve) => require(['@/views/order/orderList'], resolve),
         name: '订单列表',
         meta: { title: '订单列表', icon: 'user' }
+      },
+      {
+        path: 'waitingAccept',
+        component: (resolve) => require(['@/views/order/waitingAccept'], resolve),
+        name: '待接单',
+        meta: { title: '待接单', icon: 'user' }
+      },
+      {
+        path: 'waitingPrint',
+        component: (resolve) => require(['@/views/order/waitingPrint'], resolve),
+        name: '待取件',
+        meta: { title: '待取件', icon: 'user' }
+      },
+      {
+        path: 'cancel',
+        component: (resolve) => require(['@/views/order/cancel'], resolve),
+        name: '已取消',
+        meta: { title: '已取消', icon: 'user' }
       },
       {
         path: 'detail/:id',
@@ -69,18 +89,31 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/price',
+    path: '/shopSet',
     component: Layout,
     redirect: 'noredirect',
     children: [
       {
         path: 'list',
-        component: (resolve) => require(['@/views/price'], resolve),
-        name: '价格设置',
-        meta: { title: '价格设置', icon: 'user' }
+        component: (resolve) => require(['@/views/shopSet'], resolve),
+        name: '店铺设置',
+        meta: { title: '店铺设置', icon: 'user' }
       }
     ]
   },
+  // {
+  //   path: '/price',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   children: [
+  //     {
+  //       path: 'list',
+  //       component: (resolve) => require(['@/views/price'], resolve),
+  //       name: '价格设置',
+  //       meta: { title: '价格设置', icon: 'user' }
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/order',
   //   component: Layout,
