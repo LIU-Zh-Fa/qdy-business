@@ -161,7 +161,7 @@ export default {
       acceptBtn: false,
       orderList: [],
       username: '',
-      phonennum: '',
+      phonenum: '',
       remark: ''
     };
   },
@@ -206,7 +206,7 @@ export default {
         orderDetail({orderId: row.id}).then(res=>{
           this.remark = res.data.SysOrder.remark
           this.username = res.data.SysOrder.username
-          this.phonennum = res.data.SysOrder.phonennum
+          this.phonenum = res.data.SysOrder.phonenum
           this.orderList = res.data.SysFile
           this.acceptBtn = false
         })

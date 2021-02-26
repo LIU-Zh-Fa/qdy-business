@@ -27,7 +27,7 @@
       </template>
         <div @click="goWait" style="cursor: pointer;">
           <el-badge :value="number" class="item" style="margin-right: 30px;top:6px">
-            <i class="el-icon-bell" style="font-size:20px"></i>
+            <span class="unaccept" style="font-size: 12px">待接单</span>
           </el-badge>
         </div>
       <!-- 头像下拉 -->
@@ -328,6 +328,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.unaccept:hover{
+  color: #97a8be;
+}
 .navbar::v-deep .el-badge__content.is-fixed{
   transform: translateY(0) translateX(100%);
 }

@@ -2,9 +2,9 @@
   <div class="app-container">
       <div class="baseInfo">
           <el-row>
-              <el-col :span="8"><span><b>订单编号</b>：</span>{{ordernum}}</el-col>
               <el-col :span="8"><span><b>姓名</b>：</span>{{username}}</el-col>
               <el-col :span="8"><span><b>联系电话</b>：</span>{{phonenum}}</el-col>
+              <el-col :span="8"><span><b>订单编号</b>：</span>{{ordernum}}</el-col>
             </el-row>
             <el-row>
               <el-col :span="24"><span><b>备注</b>：</span>{{remark}}</el-col>
@@ -52,7 +52,7 @@
         </p> 
         <div class="btn">
           <el-button @click="closePage">关闭</el-button>
-          <el-button type="primary" @click="downloadAll" v-show="!candown">一键下载</el-button>
+          <el-button type="primary" @click="downloadAll" v-show="(status=='cb_accept_waiting_print' || status=='printed') && !candown">一键下载</el-button>
         </div>
       </div>
       <el-dialog

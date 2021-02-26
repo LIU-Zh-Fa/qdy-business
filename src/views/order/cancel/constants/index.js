@@ -9,4 +9,4 @@ export const statusOptions = [
     {value:'cb_accept_waiting_print',label:'待取件'},
     {value:'waiting_print_time_out',label:'取件超时'},
     {value:'printed',label:'已取件'}
-  ]  
+  ] 

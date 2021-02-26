@@ -147,6 +147,9 @@ export default {
       },
       openAccept: false,
       acceptBtn: false,
+      remark: '',
+      username: '',
+      phonenum: '',
       orderList: []
     };
   },
@@ -192,6 +195,9 @@ export default {
         this.acceptId = row.id
         this.acceptBtn = true
         orderDetail({orderId: row.id}).then(res=>{
+          this.remark = res.data.SysOrder.remark
+          this.username = res.data.SysOrder.username
+          this.phonenum = res.data.SysOrder.phonenum
           this.orderList = res.data.SysFile
           this.acceptBtn = false
         })
