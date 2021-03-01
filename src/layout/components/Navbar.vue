@@ -127,8 +127,11 @@ import Hamburger from "@/components/Hamburger";
 import Screenfull from "@/components/Screenfull";
 import SizeSelect from "@/components/SizeSelect";
 import LangSelect from "@/components/LangSelect";
-  import socket from '@/views/socket'
+import socket from '@/views/socket'
 import { getCount } from "@/api/orderList";
+import { calcDate } from "@/utils/date";
+import { validatenull } from '@/utils/validate'
+import website from '@/config/website'
 export default {
   components: {
     Breadcrumb,
@@ -149,6 +152,10 @@ export default {
       }
     };
     return {
+      //刷新token锁
+      refreshLock: false,
+      //刷新token的时间
+      refreshTime: "",
       number: 0,
       open: false,
       passOpen: false,
@@ -217,8 +224,12 @@ export default {
       );
     });
   },
+  mounted() {
+    //实时检测刷新token
+    this.refreshToken()
+  },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "device"]),
+    ...mapGetters(["sidebar", "avatar", "device", 'last_refresh_token_time']),
     setting: {
       get() {
         return this.$store.state.settings.showSettings;
@@ -235,6 +246,27 @@ export default {
     },
   },
   methods: {
+        //10分钟检测一次token
+    refreshToken() {
+      this.refreshTime = setInterval(() => {
+        const date = calcDate(
+          this.last_refresh_token_time,
+          new Date().getTime()
+        );
+        if (validatenull(date)) return;
+        if (date.seconds >= website.tokenTime && !this.refreshLock) {
+          this.refreshLock = true;
+          this.$store
+            .dispatch("RefreshToken")
+            .then(() => {
+              this.refreshLock = false;
+            })
+            .catch(() => {
+              this.refreshLock = false;
+            });
+        }
+      }, 1000 * 60 * 1 );
+    },
     goWait(){
       console.log(123)
       if(this.$route.path == "/order/waitingAccept"){

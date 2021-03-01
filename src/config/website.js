@@ -6,7 +6,7 @@ export default {
   clientSecret: "test_secret", // 客户端密钥 test_secret
   key: "cosmoplat-qdcloud-admin", //配置主键,目前用于存储
   lockPage: "/lock",
-  tokenTime: 6000,
+  tokenTime: 3000,
   //http的status默认放行不才用统一处理的,
   statusWhiteList: [],
   //配置工作台不可关闭

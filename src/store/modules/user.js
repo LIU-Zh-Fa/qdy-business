@@ -1,7 +1,7 @@
 import { login, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { setStore, getStore } from "@/utils/store";
-import { loginByUsername, getUserInfo, logout } from '@/api/user'
+import { loginByUsername, getUserInfo, logout, refeshToken } from '@/api/user'
 import { validatenull } from "@/utils/validate";
 
 const user = {
@@ -81,6 +81,7 @@ const user = {
           .then(res => {
             const data = res;
             commit("SET_TOKEN", data.data);
+            commit("SET_LAST_REFRESH_TOKEN_TIME", new Date().getTime());
             // commit("SET_TOKEN", data.data);
             // commit("SET_ROUTES",{})
             resolve();
@@ -100,6 +101,7 @@ const user = {
         login(username, password, code, uuid).then(res => {
           setToken(res.token)
           commit('SET_TOKEN', res.token)
+          commit("SET_LAST_REFRESH_TOKEN_TIME", new Date().getTime());
           resolve()
         }).catch(error => {
           reject(error)
@@ -163,7 +165,21 @@ const user = {
     // 保存用户信息
     setUserInfo( { commit }, userInfo){
       commit("SET_USER_INFO", userInfo);
-    }
+    },
+    // 刷新token
+    RefreshToken({ state, commit }, refreshForm) {
+      return new Promise((resolve, reject) => {
+        refeshToken()
+          .then(res => {
+            commit("SET_TOKEN", res.data);
+            commit("SET_LAST_REFRESH_TOKEN_TIME", new Date().getTime());
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
   }
 }
 

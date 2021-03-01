@@ -306,8 +306,10 @@ export default {
         },
         websocketonmessage(event) {//接收服务器推送的信息
             let res = JSON.parse(event.data)
+            console.log(res)
             if(res.type == 1){
                 // 创建订单
+                console.log(this.userInfo.state)
                 if(this.userInfo.state == 1){
                     this.playNewz()
                     this.showNewz(res.payload)

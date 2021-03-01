@@ -35,3 +35,10 @@ export function savePass(params){
     data: params
   });
 }
+export function refeshToken(){
+  return request({
+    url: "/publicController/refreshToken",
+    method: "get",
+    params: {}
+  });
+}
