@@ -4,7 +4,7 @@
 export default {
   clientId: "test_client", // 客户端id test_client
   clientSecret: "test_secret", // 客户端密钥 test_secret
-  key: "cosmoplat-qdcloud-admin", //配置主键,目前用于存储
+  key: "qdy-business", //配置主键,目前用于存储
   lockPage: "/lock",
   tokenTime: 6000,
   //http的status默认放行不才用统一处理的,

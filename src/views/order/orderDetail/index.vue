@@ -33,7 +33,10 @@
               <img v-else src="../../../assets/image/unknow.png" alt="">
               <p>{{item.originalfilename}}</p>
             </div>
-            <a v-show="candown" :href="download+'?fileId='+item.fileuuid" :download="item.originalfilename">下载</a>
+            <div>
+              <a style="margin-right: 20px" v-show="candown && ['pdf','jpe','jpeg','pbg','jpg','docx','doc','xls','xlsx','ppt','pptx','pps','ppsx'].indexOf(item.originalfilename.split('.')[item.originalfilename.split('.').length-1].toLowerCase()) >= 0" @click="showOne(item.fileuuid,item.originalfilename)">预览</a>
+              <a v-show="candown" @click="downOne(item.fileuuid,item.originalfilename)">下载</a>
+            </div>
           </div>
       </div>
       <div class="num">
@@ -47,12 +50,14 @@
             :step="0.1" 
             :min="0">
             </el-input-number>
-          <i v-show="!nubBool" class="el-icon-edit-outline editBtn" @click="nubBool = true"></i>
-          <svg-icon v-show="nubBool" icon-class="save"  class="saveBtn" @click="orderAmountSave"/>
+            <span v-show="!nubBool" class="editBtn" @click="nubBool = true">修改</span>
+            <span v-show="nubBool"  class="saveBtn" @click="orderAmountSave">保存</span>
+          <!-- <i v-show="!nubBool" class="el-icon-edit-outline editBtn" @click="nubBool = true"></i> -->
+          <!-- <svg-icon v-show="nubBool" icon-class="save"  class="saveBtn" @click="orderAmountSave"/> -->
         </p> 
         <div class="btn">
           <el-button @click="closePage">关闭</el-button>
-          <el-button type="primary" @click="downloadAll" v-show="(status=='cb_accept_waiting_print' || status=='printed') && !candown">一键下载</el-button>
+          <el-button type="primary" @click="downloadAll" v-show="(status=='cb_accept_waiting_print' || status=='printed') && !candown">我要打印</el-button>
         </div>
       </div>
       <el-dialog
@@ -70,7 +75,7 @@
 </template>
 
 <script>
-import { orderDetail,orderAmountSave, checkPickCode, verification } from "@/api/orderList";
+import { orderDetail,orderAmountSave, checkPickCode, verification, downloadUrl, previewUrl } from "@/api/orderList";
 export default {
   name: "orderdetail",
   data() {
@@ -78,6 +83,7 @@ export default {
         id: '',
         download: '',
         phonenum: '',
+        ordernum: '',
         username: '',
         remark: '',
         num: 0,
@@ -98,6 +104,7 @@ export default {
         this.username = res.data.SysOrder.username;
         this.remark = res.data.SysOrder.remark;
         this.ordernum = res.data.SysOrder.ordernum
+        this.num = res.data.SysOrder.amount
         this.status = res.data.SysOrder.state
         this.orderList = res.data.SysFile
     })
@@ -106,8 +113,35 @@ export default {
     this.download = process.env.VUE_APP_BASE_API + '/cb/download'
   },
   methods: {
+    showOne(key,name){
+      previewUrl({key:key}).then(res=>{
+        if(res.code == 200){
+          let type = key.split(".")[key.split(".").length-1].toLowerCase()
+          let url = ''
+          if( ['pdf','jpe','jpeg','pbg','jpg'].indexOf(type)>=0){
+            url = res.data
+          }else if(['docx','doc','xls','xlsx','ppt','pptx','pps','ppsx'].indexOf(type)>=0){
+            url = "https://view.officeapps.live.com/op/view.aspx?src="+encodeURI(res.data)
+          }
+          window.open(url)
+        }
+      })
+    },
+    downOne(key,filename){
+      downloadUrl({key:key}).then(res=>{
+        if(res.code == 200){
+          let a = document.createElement('a') // 创建a标签
+          let e = document.createEvent('MouseEvents') // 创建鼠标事件对象
+          e.initEvent('click', false, false) // 初始化事件对象
+          a.href = res.data // 设置下载地址
+          a.download = filename // 设置下载文件名
+          a.dispatchEvent(e)
+        }
+      })
+    },
     checkPickCode(){
         this.btnloading=true
+        console.log(this.status)
         if(this.status == 'cb_accept_waiting_print'){
           checkPickCode({orderId: this.id, pickCode:this.pickCode}).then(res=>{
               this.btnloading=false
@@ -115,14 +149,7 @@ export default {
                   this.open = false
                   this.candown = true
                   // this.goDetail(this.id)
-                  this.orderList.map(item=>{
-                    let a = document.createElement('a') // 创建a标签
-                    let e = document.createEvent('MouseEvents') // 创建鼠标事件对象
-                    e.initEvent('click', false, false) // 初始化事件对象
-                    a.href = this.download+'?fileId='+item.fileuuid // 设置下载地址
-                    a.download = item.originalfilename // 设置下载文件名
-                    a.dispatchEvent(e)
-                  })
+                  // this.downloadBc()
               }else{
                   this.$message({
                       type: 'error',
@@ -139,15 +166,7 @@ export default {
               if(res.code == 200){
                   this.open = false
                   this.candown = true
-                  // this.goDetail(this.id)
-                  this.orderList.map(item=>{
-                    let a = document.createElement('a') // 创建a标签
-                    let e = document.createEvent('MouseEvents') // 创建鼠标事件对象
-                    e.initEvent('click', false, false) // 初始化事件对象
-                    a.href = this.download+'?fileId='+item.fileuuid // 设置下载地址
-                    a.download = item.originalfilename // 设置下载文件名
-                    a.dispatchEvent(e)
-                  })
+                  // this.downloadBc()
               }else{
                   this.$message({
                       type: 'error',
@@ -159,7 +178,21 @@ export default {
               this.btnloading=false
           })
         }
-        
+    },
+    async downloadBc(){
+      for(var i = 0; i<this.orderList.length; i++){
+        var item = this.orderList[i];
+        await downloadUrl({key:item.fileuuid}).then(res=>{
+          if(res.code == 200){
+            let a = document.createElement('a') // 创建a标签
+            let e = document.createEvent('MouseEvents') // 创建鼠标事件对象
+            e.initEvent('click', false, false) // 初始化事件对象
+            a.href = res.data // 设置下载地址
+            a.download = item.originalfilename // 设置下载文件名
+            a.dispatchEvent(e)
+          }
+        })
+      }
     },
     handleClose(){
         this.open = false;
@@ -242,7 +275,7 @@ export default {
         color: #606266;
       }
     }
-    > a{
+    > div:nth-child(2) a{
       line-height: 32px;
       color: #409EFF;
     }
@@ -259,13 +292,13 @@ export default {
   color: #409EFF;
   cursor: pointer;
   margin-left: 12px;
-  font-size: 24px;
+  font-size: 16px;
 }
 .saveBtn{
-  color: #487baf;
+  color: #409EFF;
   cursor: pointer;
   margin-left: 12px;
-  font-size: 20px;
+  font-size: 16px;
 }
 .price{
   display: flex;

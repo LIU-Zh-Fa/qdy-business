@@ -179,6 +179,7 @@ export default {
         pickCode: '',
         phonenum: ''
       }
+      this.getList()
     },
     /** 搜索按钮操作 */
     handleQuery() {

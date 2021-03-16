@@ -73,3 +73,17 @@ export function getCount(params){
     params: params
   })
 }
+export function downloadUrl(params){
+  return request({
+      url: "/cos/downloadUrl",
+      method: "get",
+      params: params
+  })
+}
+export function previewUrl(params){
+  return request({
+      url: "/cos/previewUrl",
+      method: "get",
+      params: params
+  })
+}

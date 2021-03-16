@@ -1,7 +1,8 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">后台管理系统</h3>
+    <h3 class="el-login-top">打印商户中心</h3>
+      <h3 class="title">商户登录</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -32,7 +33,8 @@
           <img :src="codeUrl" @click="getCode" class="login-code-img"/>
         </div>
       </el-form-item> -->
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <!-- <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox> -->
+      <p class="xy">登录即同意<span @click="openAgreB = true">《用户协议》</span>和<span @click="openPrivacyB = true">《隐私政策》</span></p>
       <el-form-item style="width:100%;">
         <el-button
           :loading="loading"
@@ -48,8 +50,26 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2019</span>
+      <a href="https://beian.miit.gov.cn/" target="_blank">去干嘛版权所有 © 2020-2021 鲁ICP备2021006417号-1</a>
     </div>
+    <el-dialog
+        :visible.sync="openAgreB"
+        width="70%">
+        <arge></arge>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="openAgreB=false">取 消</el-button>
+            <el-button type="primary" @click="openAgreB=false">确 定</el-button>
+        </span>
+    </el-dialog>
+    <el-dialog
+      :visible.sync="openPrivacyB"
+      width="70%">
+      <privacy></privacy>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="openPrivacyB=false">取 消</el-button>
+          <el-button type="primary" @click="openPrivacyB=false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -57,15 +77,19 @@
   import { getCodeImg } from "@/api/login";
   import Cookies from "js-cookie";
   import { encrypt, decrypt } from '@/utils/jsencrypt'
-
+import arge from './Arge'
+import privacy from './Privacy'
   export default {
     name: "Login",
+    components:{
+      privacy,arge
+    },
     data() {
-
       return {
-
         codeUrl: "",
         cookiePassword: "",
+        openAgreB:false,
+        openPrivacyB:false,
         loginForm: {
           username: "",
           password: "",
@@ -100,6 +124,12 @@
       //this.getCookie();
     },
     methods: {
+      openAgre(){
+
+      },
+      openPrivacy(){
+
+      },
       getCode() {
         getCodeImg().then(res => {
           this.codeUrl = "data:image/gif;base64," + res.img;
@@ -153,7 +183,12 @@
     }
   };
 </script>
-
+<style lang="scss" scoped>
+.login ::v-deep .el-dialog__body{
+  height: 400px;
+  overflow-y: scroll;
+}
+</style>
 <style rel="stylesheet/scss" lang="scss">
   .login {
     display: flex;
@@ -161,19 +196,26 @@
     align-items: center;
     height: 100%;
     background-image: url("../assets/image/login-background.jpg");
-    background-size: cover;
+    background-size: 100% 100%;
   }
   .title {
     margin: 0px auto 30px auto;
     text-align: center;
     color: #707070;
   }
-
+  .xy{
+    font-size: 12px;
+    span{
+      color: #1890ff;
+      cursor: pointer;
+    }
+  }
   .login-form {
     border-radius: 6px;
     background: #ffffff;
-    width: 400px;
+    width: 300px;
     padding: 25px 25px 5px 25px;
+    position: relative;
     .el-input {
       height: 38px;
       input {
@@ -200,6 +242,14 @@
       vertical-align: middle;
     }
   }
+  .el-login-top{
+    position: absolute;
+    top: -120px;
+    width: 250px;
+    text-align: center;
+    font-size: 36px;
+    color: #555;
+  }
   .el-login-footer {
     height: 40px;
     line-height: 40px;
@@ -207,7 +257,7 @@
     bottom: 0;
     width: 100%;
     text-align: center;
-    color: #fff;
+    color: #666;
     font-family: Arial;
     font-size: 12px;
     letter-spacing: 1px;

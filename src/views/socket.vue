@@ -39,7 +39,7 @@ export default {
     methods: {
         initWebSocket(){//建立连接
             //初始化weosocket
-           const wsuri = "ws://49.232.130.5:8889/api/dayin/ws/oneToOne" 
+           const wsuri = "ws://be.qudayin.cn/api/dayin/ws/oneToOne" 
            //建立连接
             this.websock = new WebSocket(wsuri);
             //连接成功
@@ -101,6 +101,7 @@ export default {
             if (borswer.indexOf("ie") >= 0) {
                 //IE内核浏览器
                 var strEmbed = '<embed name="embedPlay" src="'+this.newOrder+'" autostart="true" hidden="true" loop="false"></embed>';
+                $("body").find("embed").remove()
                 if ($("body").find("embed").length <= 0){
                     $("body").append(strEmbed);
                 }
@@ -117,6 +118,7 @@ export default {
             } else {
                 //非IE内核浏览器
                 var strAudio = "<audio id='audioPlay' type='audio/mpeg' src='"+this.newOrder+"' hidden='true'>";
+                $("body").find("audio").remove()
                 if ($("body").find("audio").length <= 0){
                     $("body").append(strAudio);
                 }
@@ -140,6 +142,7 @@ export default {
             if (borswer.indexOf("ie") >= 0) {
                 //IE内核浏览器
                 var strEmbed = '<embed name="embedPlay" src="'+this.newOrderz+'" autostart="true" hidden="true" loop="false"></embed>';
+                $("body").find("embed").remove()
                 if ($("body").find("embed").length <= 0){
                     $("body").append(strEmbed);
                 }
@@ -156,6 +159,7 @@ export default {
             } else {
                 //非IE内核浏览器
                 var strAudio = "<audio id='audioPlay' type='audio/mpeg' src='"+this.newOrderz+"' hidden='true'>";
+                $("body").find("audio").remove()
                 if ($("body").find("audio").length <= 0){
                     $("body").append(strAudio);
                 }
@@ -179,6 +183,7 @@ export default {
             if (borswer.indexOf("ie") >= 0) {
                 //IE内核浏览器
                 var strEmbed = '<embed name="embedPlay" src="'+this.cancelAudio+'" autostart="true" hidden="true" loop="false"></embed>';
+                $("body").find("embed").remove()
                 if ($("body").find("embed").length <= 0){
                     $("body").append(strEmbed);
                 }
@@ -195,6 +200,7 @@ export default {
             } else {
                 //非IE内核浏览器
                 var strAudio = "<audio id='audioPlay' type='audio/mpeg' src='"+this.cancelAudio+"' hidden='true'>";
+                $("body").find("audio").remove()
                 if ($("body").find("audio").length <= 0){
                     $("body").append(strAudio);
                 }

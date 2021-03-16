@@ -1,6 +1,6 @@
 <template>
-  <div class="dashboard-editor-container">
-    敬请期待。。。
+  <div class="home">
+    <img src="../assets/image/qrcode.png" alt="">
   </div>
 </template>
 
@@ -11,4 +11,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.home{
+  height: calc(100vh - 84px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img{
+    width: 827px;
+    height: 302px;
+  }
+}
 </style>

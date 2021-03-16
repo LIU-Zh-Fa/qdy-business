@@ -36,7 +36,7 @@
         trigger="click"
       >
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" />
+          <img src="../../assets/logo/logo.png" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -67,7 +67,7 @@
           <span>{{ form.phonenum }}</span>
         </el-form-item>
         <el-form-item label="地址：">
-          <span>{{ form.province + "" + form.city + "" + form.address }}</span>
+          <span>{{ form.sysdistrictname + "" + form.address }}</span>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -169,6 +169,7 @@ export default {
       form: {
         province: "",
         city: "",
+        sysdistrictname: '',
         address: "",
         phonenum: "",
         merchantname: "",
@@ -336,6 +337,7 @@ export default {
       this.form = {
         province: "",
         city: "",
+        sysdistrictname: '',
         address: "",
         phonenum: "",
         merchantname: "",
